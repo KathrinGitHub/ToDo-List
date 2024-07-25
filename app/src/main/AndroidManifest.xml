@@ -1,14 +1,15 @@
 <!-- src/main/AndroidManifest.xml -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.todo_list">
+    package="com.example.todoapp">
 
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.AppCompat.Light"
         android:supportsRtl="true">
-        <activity android:name=".MainActivity"
+        <activity android:name="com.example.todoapp.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
