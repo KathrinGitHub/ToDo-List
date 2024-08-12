@@ -1,5 +1,6 @@
 package com.example.todoapp
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,7 @@ class ToDoAdapter(private val todos: MutableList<ToDo>) : RecyclerView.Adapter<T
     override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
         val todo = todos[position]
         holder.titleTextView.text = todo.title
+        holder.checkBox.setOnCheckedChangeListener(null)
         holder.checkBox.isChecked = todo.isDone
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             todo.isDone = isChecked
@@ -34,5 +36,6 @@ class ToDoAdapter(private val todos: MutableList<ToDo>) : RecyclerView.Adapter<T
     fun addToDo(todo: ToDo) {
         todos.add(todo)
         notifyItemInserted(todos.size -1)
+        Log.d("ToDoAdapter", "ToDo hinzugefügt: ${todo.title}")
     }
 }

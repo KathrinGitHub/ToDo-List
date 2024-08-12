@@ -2,7 +2,9 @@ package com.example.todoapp
 
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,6 +46,9 @@ class MainActivity : AppCompatActivity() {
             if (title.isNotEmpty()) {
                 val todo = ToDo(title)
                 toDoAdapter.addToDo(todo)
+                Log.d("MainActivity", "ToDo hinzugefügt: $title")
+                Toast.makeText(this, "ToDo hinzugefügt: $title", Toast.LENGTH_SHORT).show()
+
             }
             dialog.dismiss()
         }
