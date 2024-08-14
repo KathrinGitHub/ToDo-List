@@ -1,30 +1,52 @@
 [versions]
 agp = "8.5.1"
+androidEspressoCore = "3.0.2"
 androidxJunit = "1.2.1"
 appcompatVersion = "1.7.0"
 coreKtxVersion = "1.10.1"
 espressoCoreVersion = "3.6.1"
+hamcrest = "2.2"
 kotlin = "1.9.0"
 coreKtx = "1.12.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
+kotlinTest = "1.8.10"
 material = "1.11.0"
 materialVersion = "1.8.0"
+junitKtx = "1.2.1"
+mockitoCore = "4.8.0"
+robolectric = "4.10"
+robolectricVersion = "4.8"
+rules = "1.6.1"
+core = "1.44.0"
 
 [libraries]
 androidx-appcompat-v170 = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
+androidx-core = { module = "androidx.test:core", version.ref = "rules" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-ktx-v1101 = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
+androidx-espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "espressoCoreVersion" }
 androidx-espresso-core-v361 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
 androidx-junit-v121 = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
+androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "rules" }
+espresso-core = { module = "com.android.support.test.espresso:espresso-core", version.ref = "androidEspressoCore" }
+hamcrest = { module = "org.hamcrest:hamcrest", version.ref = "hamcrest" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlinTest" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 material-v180 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+core = { group = "com.google.ar", name = "core", version.ref = "core" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoCore" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+robolectric-v48 = { module = "org.robolectric:robolectric", version.ref = "robolectricVersion" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

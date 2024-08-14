@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id("com.android.application") version "8.5.2"
+    id("org.jetbrains.kotlin.android") version "1.9.0"
 }
 
 android {
@@ -36,10 +36,32 @@ android {
 }
 
 dependencies {
+
+
     implementation(libs.androidx.core.ktx.v1101)
     implementation(libs.androidx.appcompat.v170)
     implementation(libs.material.v180)
+    implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.espresso.core.v361)
+    implementation(libs.core)
+
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.robolectric.v48)
+    testImplementation(libs.androidx.core)
+    testImplementation(libs.androidx.junit.v121)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+
+    androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.androidx.junit.v121)
-    androidTestImplementation(libs.androidx.espresso.core.v361)
+    androidTestImplementation(libs.androidx.espresso.contrib)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.hamcrest)
+
+
+
+
 }

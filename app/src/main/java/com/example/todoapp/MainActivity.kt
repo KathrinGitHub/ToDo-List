@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         builder.show()
     }
-     private fun addToDoItem(todo: ToDo) {
+     fun addToDoItem(todo: ToDo) {
          todos.add(todo)
          toDoAdapter.notifyItemInserted(todos.size -1)
      }
