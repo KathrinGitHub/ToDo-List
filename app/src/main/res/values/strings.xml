@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">ToDoApp</string>
+    <string name="tv_login_title_text">Welcome!</string>
+    <string name="tv_login_register_text"><u>Register</u></string>
+    <string name="tv_login_forgotpassword_text"><u>Forgot Password?</u></string>
+    <string name="tv_forgotpassword_description_text">Please enter your e-mail address and we\'ll send you an e-mail to reset your password</string>
+    <string name="et_login_email_hint">Email</string>
+    <string name="btn_forgotpassword_submit_text">Submit</string>
+    <string name="et_login_password_hint">Password</string>
+    <string name="btn_login_login_text">Login</string>
+    <string name="tv_login_donthaveanaccount_text">Don\'t have an Account?</string>
+    <string name="tv_register_title_text">CREATE AN ACCOUNT</string>
+    <string name="til_register_firstname_hint">First Name</string>
+    <string name="til_lastname_hint">Last Name</string>
+    <string name="til_register_confirmpassword_hint">Confirm Password</string>
+    <string name="cb_register_termsandcondition_text">I Agree to the <u>Terms and Condition</u></string>
+    <string name="btn_register_register_text">REGISTER</string>
+    <string name="tv_register_alreadyhaveanaccount_text">Already have an account?</string>
+    <string name="tv_register_login_text"><u>Login</u></string>
+    <string name="tv_forgotpassword_title_text">FORGOT PASSWORD</string>
 </resources>
