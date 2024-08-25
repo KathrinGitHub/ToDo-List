@@ -1,19 +1,20 @@
 package com.example.todoapp
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
+import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todoapp.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var toDoAdapter: ToDoAdapter
+    private var selectedToDoList: ToDoList? = null
     private val todos = mutableListOf<ToDo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +22,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         //println("Hello, World!")
 
-        toDoAdapter = ToDoAdapter(todos)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val listName = intent.getStringExtra("list_name")
+        selectedToDoList = getToDoListByName(listName)
+
+        toDoAdapter = ToDoAdapter(selectedToDoList?.todos ?: mutableListOf())
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         recyclerView.adapter = toDoAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -30,6 +36,28 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener {
             showAddToDoDialog()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(this, ToDoListOverviewActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()  // Beendet die aktuelle Activity
+    }
+
+    private fun getToDoListByName(name: String?): ToDoList? {
+
+        return null // Platzhalter TODO
     }
 
     private fun showAddToDoDialog() {
@@ -45,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             if (title.isNotEmpty()) {
                 val todo = ToDo(title)
                 toDoAdapter.addToDo(todo)
-                Log.d("MainActivity", "ToDo hinzugefügt: $title")
+                //Log.d("MainActivity", "ToDo hinzugefügt: $title")
                 Toast.makeText(this, "ToDo hinzugefügt: $title", Toast.LENGTH_SHORT).show()
 
             }
@@ -55,8 +83,8 @@ class MainActivity : AppCompatActivity() {
 
         builder.show()
     }
-     fun addToDoItem(todo: ToDo) {
-         todos.add(todo)
-         toDoAdapter.notifyItemInserted(todos.size -1)
-     }
+    fun addToDoItem(todo: ToDo) {
+        todos.add(todo)
+        toDoAdapter.notifyItemInserted(todos.size -1)
+    }
 }
