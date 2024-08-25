@@ -1,6 +1,5 @@
 package com.example.todoapp
 
-import ToDoListAdapter
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -49,8 +48,10 @@ class ToDoListOverviewActivity : AppCompatActivity() {
             val listName = input.text.toString()
             if (listName.isNotEmpty()) {
                 val toDoList = ToDoList(listName, mutableListOf())
-                toDoLists.add(toDoList)
-                toDoListAdapter.notifyItemInserted(toDoLists.size - 1)
+                //toDoLists.add(toDoList)
+                //toDoListAdapter.notifyItemInserted(toDoLists.size - 1)
+                toDoListAdapter.addToDoList(toDoList)
+
             }
             dialog.dismiss()
         }

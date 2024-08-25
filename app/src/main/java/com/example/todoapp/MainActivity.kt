@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, ToDoListOverviewActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
-        finish()  // Beendet die aktuelle Activity
+        finish()
     }
 
     private fun getToDoListByName(name: String?): ToDoList? {
@@ -82,9 +83,5 @@ class MainActivity : AppCompatActivity() {
         builder.setNeutralButton("Cancel") { dialog, _ -> dialog.cancel()}
 
         builder.show()
-    }
-    fun addToDoItem(todo: ToDo) {
-        todos.add(todo)
-        toDoAdapter.notifyItemInserted(todos.size -1)
     }
 }

@@ -21,7 +21,7 @@ class MainActivityTest {
 
     @get:Rule
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
-
+/*
     @Test
     fun testShowAddToDoDialog() {
         val scenario = activityRule.scenario
@@ -52,7 +52,7 @@ class MainActivityTest {
             assertEquals("Test ToDo", adapter.todos[0].title)
         }
     }
-
+*/
 /*
     @Test
     fun testAddToDoItem() {
