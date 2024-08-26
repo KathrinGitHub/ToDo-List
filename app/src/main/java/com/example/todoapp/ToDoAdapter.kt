@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todoapp.R
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ToDoAdapter(
     private val todos: MutableList<ToDo>
@@ -15,6 +17,9 @@ class ToDoAdapter(
 
     inner class ToDoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.textViewTitle)
+        val descriptionTextView: TextView = itemView.findViewById(R.id.textViewDescription)
+        val dueDateTextView: TextView = itemView.findViewById(R.id.textViewDueDate)
+        val priorityTextView: TextView = itemView.findViewById(R.id.textViewPriority)
         val checkBox: CheckBox = itemView.findViewById(R.id.checkBox)
     }
 
@@ -26,6 +31,13 @@ class ToDoAdapter(
     override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
         val todo = todos[position]
         holder.titleTextView.text = todo.title
+        holder.descriptionTextView.text = todo.description
+        holder.dueDateTextView.text = todo.dueDate?.let { formatDate(it) } ?: "No due date"
+        holder.priorityTextView.text = when (todo.priority) {
+            2 -> "High"
+            1 -> "Medium"
+            else -> "Low"
+        }
         holder.checkBox.setOnCheckedChangeListener(null)
         holder.checkBox.isChecked = todo.isDone
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
@@ -33,10 +45,18 @@ class ToDoAdapter(
         }
     }
 
+    private fun formatDate(timestamp: Long): String {
+        val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        return sdf.format(Date(timestamp))
+    }
+
     override fun getItemCount() = todos.size
 
     fun addToDo(todo: ToDo) {
         todos.add(todo)
         notifyItemInserted(todos.size -1)
+        Log.d("ToDoAdapter", "ToDo hinzugefügt: $todo")
+        notifyDataSetChanged()
+
     }
 }

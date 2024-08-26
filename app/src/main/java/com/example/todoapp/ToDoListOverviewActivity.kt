@@ -20,7 +20,7 @@ class ToDoListOverviewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_todolist_overview)
 
         toDoListAdapter = ToDoListAdapter(toDoLists) { selectedList ->
-            val intent = Intent(this, MainActivity::class.java).apply {
+            val intent = Intent(this, InnerListActivity::class.java).apply {
                 putExtra("list_name", selectedList.name)
             }
             startActivity(intent)

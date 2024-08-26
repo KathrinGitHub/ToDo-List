@@ -1,26 +1,18 @@
 package com.example.todoapp
 
-import android.app.AlertDialog
 import android.os.Build
-import android.widget.EditText
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.junit.Assert.assertEquals
 import org.junit.Rule
-import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import org.robolectric.shadows.ShadowToast
-import org.robolectric.shadows.ShadowDialog
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.P])
-class MainActivityTest {
+class InnerListActivityTest {
 
     @get:Rule
-    val activityRule = ActivityScenarioRule(MainActivity::class.java)
+    val activityRule = ActivityScenarioRule(InnerListActivity::class.java)
 /*
     @Test
     fun testShowAddToDoDialog() {
