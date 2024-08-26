@@ -17,12 +17,12 @@ class LoginActivity : BasicActivity() {
 
         val tvRegister: TextView = findViewById(R.id.tv_login_register)
         tvRegister.setOnClickListener {
-            //startActivity(Intent(this, RegisterActivity::class.java))
+            startActivity(Intent(this, RegistrationActivity::class.java))
         }
 
         val tvForgotPassword: TextView = findViewById(R.id.tv_login_forgotpassword)
         tvForgotPassword.setOnClickListener {
-            //startActivity(Intent(this, ForgotPasswordActivity::class.java))
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
 
         val btnLogin : Button = findViewById(R.id.btn_login_login)
@@ -36,7 +36,6 @@ class LoginActivity : BasicActivity() {
         val password : String = (findViewById(R.id.et_login_password)as EditText).text.toString().trim{ it <= ' '}
 
         if(validateLoginInformation(emailID, password)){
-            /*
             FirebaseAuth
                 .getInstance()
                 .signInWithEmailAndPassword(emailID, password)
@@ -47,22 +46,18 @@ class LoginActivity : BasicActivity() {
                         showCustomSnackbar(task.exception!!.message.toString(), true);
                     }
                 }
-             */
-
-            showCustomSnackbar("yay :D", false)
-            userLoggedInSuccess()
         }
     }
 
     private fun validateLoginInformation(emailID:String, password:String) : Boolean{
         return when {
             TextUtils.isEmpty(emailID) -> {
-                //(findViewById(R.id.til_login_email) as TextInputLayout).error = getString(R.string.errormessage_login_email)
+                (findViewById(R.id.til_login_email) as TextInputLayout).error = getString(R.string.errormessage_login_email)
                 false
             }
 
             TextUtils.isEmpty(password) -> {
-                //(findViewById(R.id.til_login_password) as TextInputLayout).error = getString(R.string.errormessage_login_password)
+                (findViewById(R.id.til_login_password) as TextInputLayout).error = getString(R.string.errormessage_login_password)
                 false
             }
 
@@ -70,11 +65,11 @@ class LoginActivity : BasicActivity() {
         }
     }
 
-    fun userLoggedInSuccess(){
-        //showCustomSnackbar(getString(R.string.logged_in), false)
+    fun userLoggedInSuccess(user: User){
+        showCustomSnackbar(getString(R.string.logged_in), false)
         val intent = Intent(this, InnerListActivity::class.java)
         Log.d("todo-list", "start inner list")
         startActivity(intent)
-        //finish()
+        finish()
     }
 }

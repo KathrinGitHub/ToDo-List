@@ -11,4 +11,8 @@
     <color name="success">#05A30C</color>
     <color name="error_red">#7E0101</color>
     <color name="success_green">#449708</color>
+    <color name="green">#0C7310</color>
+    <color name="dark_green">#003302</color>
+    <color name="light_green">#05A80C</color>
+    <color name="true_white">#FEFEFE</color>
 </resources>

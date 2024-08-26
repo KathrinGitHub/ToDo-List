@@ -1,14 +1,15 @@
 package com.example.todoapp
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import com.google.firebase.auth.FirebaseAuth
 
-class RegisterActivity : BasicActivity() {
+class RegistrationActivity : BasicActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -97,13 +98,32 @@ class RegisterActivity : BasicActivity() {
 
     }
 
-    fun registerUser() {
-        if(validateUserInformation()) {
-            val firstName: String = (findViewById<EditText>(R.id.et_register_firstname)).text.toString().trim{it <= ' '}
-            val lastName: String = (findViewById<EditText>(R.id.et_register_lastname)).text.toString().trim{it <= ' '}
-            val email: String = (findViewById<EditText>(R.id.et_register_email)).text.toString().trim{it <= ' '}
-            val password: String = (findViewById<EditText>(R.id.et_register_password)).text.toString().trim{it <= ' '}
-            val confirmPassword: String = (findViewById<EditText>(R.id.et_register_confirmpassword)).text.toString().trim{it <= ' '}
+    fun registerNewUser() {
+        if(validateUserInformation()){
+            val firstName:String = (findViewById(R.id.et_register_firstname) as EditText).text.toString().trim { it <= ' '}
+            val lastName:String = (findViewById(R.id.et_register_lastname) as EditText).text.toString().trim { it <= ' '}
+            val email:String = (findViewById(R.id.et_register_email) as EditText).text.toString().trim { it <= ' '}
+            val password:String = (findViewById(R.id.et_register_password) as EditText).text.toString().trim { it <= ' '}
+            val confirmPassword:String = (findViewById(R.id.et_register_confirmpassword) as EditText).text.toString().trim { it <= ' '}
+
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if(task.isSuccessful){
+                        val firebaseUser = task.result!!.user!!
+                        showCustomSnackbar("A new user is created with Firebase-ID ${firebaseUser.uid}", false)
+
+                        //TODO: Save the rest in CloudFirestore
+                        val user = User(firebaseUser.uid, firstName, lastName, email)
+                        CloudFirestore().saveUserInfoOnCloudFirestore(this, user)
+
+                    } else {
+                        showCustomSnackbar(task.exception!!.toString(), true)
+                    }
+                }
         }
+    }
+
+    fun userRegistrationSuccess(){
+        Toast.makeText(this, "You are registered successfully.", Toast.LENGTH_SHORT).show()
     }
 }

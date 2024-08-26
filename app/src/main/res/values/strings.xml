@@ -1,21 +1,40 @@
 <resources>
-    <string name="app_name">ToDoApp</string>
-    <string name="tv_login_title_text">Welcome!</string>
+    <string name="app_name">ToDo List</string>
+    <string name="add">Add</string>
+    <string name="welcome_text">Welcome to ToDo List </string>
+    <string name="alreadyAdded">You have already added this Item</string>
+    <string name="show">Show</string>
+    <string name="save">Save</string>
+    <string name="edit">edit</string>
+
+    <!-- LOGIN SCREEN -->
     <string name="tv_login_register_text"><u>Register</u></string>
     <string name="tv_login_forgotpassword_text"><u>Forgot Password?</u></string>
-    <string name="tv_forgotpassword_description_text">Please enter your e-mail address and we\'ll send you an e-mail to reset your password</string>
-    <string name="et_login_email_hint">Email</string>
-    <string name="btn_forgotpassword_submit_text">Submit</string>
+    <string name="et_login_email_hint" translatable="false">Email</string>
     <string name="et_login_password_hint">Password</string>
-    <string name="btn_login_login_text">Login</string>
-    <string name="tv_login_donthaveanaccount_text">Don\'t have an Account?</string>
-    <string name="tv_register_title_text">CREATE AN ACCOUNT</string>
-    <string name="til_register_firstname_hint">First Name</string>
-    <string name="til_lastname_hint">Last Name</string>
+
+    <string name="til_lastname_hint">Last name</string>
+
+
+    <!-- REGISTRATION SCREEN -->
     <string name="til_register_confirmpassword_hint">Confirm Password</string>
     <string name="cb_register_termsandcondition_text">I Agree to the <u>Terms and Condition</u></string>
-    <string name="btn_register_register_text">REGISTER</string>
+    <string name="btn_register_register_text">Register</string>
     <string name="tv_register_alreadyhaveanaccount_text">Already have an account?</string>
     <string name="tv_register_login_text"><u>Login</u></string>
-    <string name="tv_forgotpassword_title_text">FORGOT PASSWORD</string>
+    <string name="tv_register_title_text">CREATE AN ACCOUNT</string>
+    <string name="til_register_firstname_hint">First name</string>
+
+    <!-- FORGOT PASSWORD SCREEN -->
+    <string name="tv_forgotpassword_title_text">FORGOT PASSWORD?</string>
+    <string name="tv_forgotpassword_description_text">Please enter your e-mail address and we\'ll send you an email to reset your password</string>
+    <string name="btn_forgotpassword_submit_text">Submit</string>
+    <string name="errormessage_login_email">Please enter an E-Mail address</string>
+    <string name="errormessage_login_password">Please enter a Password</string>
+    <string name="infomessage_forgotpassword_emailtoresetsend">Email to reset your password is sent</string>
+    <string name="errormessage_forgotpassword_emailtoresetsend">Email to resent your password could not be send</string>
+    <string name="contentdescription_login_logo">Logo of PlanMyGarden</string>
+    <string name="logout"><u>Logout</u></string>
+    <string name="plant_with_same_name_exists">There is already a Plant with this name!</string>
+    <string name="logged_in">You are logged in :)</string>
 </resources>

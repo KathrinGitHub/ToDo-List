@@ -5,47 +5,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
-    
+
     <ImageView
         android:id="@+id/iv_login_fhj_logo"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="fitXY"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/iv_200dp_height"
         android:src="@drawable/ic_launcher_background"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/true_white"/>
 
     <TextView
         android:id="@+id/tv_login_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/tv_login_title_text"
+        android:text="@string/welcome_text"
         android:textStyle="bold"
-        android:textSize="@dimen/tv_20sp_textsize"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_login_fhj_logo" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_login_fhj_logo"
+        android:layout_marginTop="@dimen/tv_login_32dp_margintop"
+        android:gravity="center"
+        android:textSize="@dimen/tv_login_20sp_textsize"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_login_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_login_title"
+        android:layout_margin="@dimen/til_login_16dp_margin"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
             android:id="@+id/et_login_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:hint="@string/et_login_email_hint"
-            android:padding="@dimen/et_16dp_padding"
-            android:textSize="@dimen/et_16sp_textsize" />
+            android:hint="Email ID"
+            android:padding="@dimen/et_login_16dp_padding"
+            android:textSize="@dimen/et_login_16sp_textsize" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -53,75 +53,74 @@
         android:id="@+id/til_login_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/til_login_email"
+        android:layout_margin="@dimen/til_login_16dp_margin"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <EditText
             android:id="@+id/et_login_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Password"
             android:inputType="textPassword"
-            android:hint="@string/et_login_password_hint"
-            android:padding="@dimen/et_16dp_padding"
-            android:textSize="@dimen/et_16sp_textsize" />
+            android:padding="@dimen/et_login_16dp_padding"
+            android:textSize="@dimen/et_login_16sp_textsize" />
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <Button
         android:id="@+id/btn_login_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:padding="@dimen/btn_8dp_padding"
-        android:text="@string/btn_login_login_text"
-        android:textSize="@dimen/btn_18sp_textsize"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/btn_login_16dp_margin"
+        android:padding="@dimen/btn_login_8dp_padding"
+        android:text="Login"
+        android:textSize="@dimen/btn_login_18sp_textsize"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/til_login_password" />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/til_login_password"/>
 
     <LinearLayout
         android:id="@+id/ll_login_registernewaccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_login_login">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_login_login"
+        android:layout_marginTop="@dimen/ll_login_64dp_margintop">
 
         <TextView
             android:id="@+id/tv_login_donthaveanaccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/tv_5dp_padding"
-            android:text="@string/tv_login_donthaveanaccount_text"
-            android:textSize="@dimen/tv_16sp_textsize"/>
+            android:text="Don't have an account?"
+            android:textSize="@dimen/tv_login_16sp_textsize"
+            android:padding="@dimen/tv_login_5dp_padding"/>
 
         <TextView
             android:id="@+id/tv_login_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/tv_5dp_padding"
             android:text="@string/tv_login_register_text"
             android:textStyle="bold"
-            android:textSize="@dimen/tv_16sp_textsize"/>
+            android:textSize="@dimen/tv_login_16sp_textsize"
+            android:padding="@dimen/tv_login_5dp_padding"/>
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_login_forgotpassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/tv_5dp_padding"
-        android:textSize="@dimen/tv_16sp_textsize"
         android:text="@string/tv_login_forgotpassword_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_login_registernewaccount"
         android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+        android:textSize="16sp"
+        android:padding="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_login_registernewaccount"
+        android:layout_marginTop="16dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
