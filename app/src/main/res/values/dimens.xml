@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="tv_20sp_textsize">20sp</dimen>
+    <dimen name="tv_forgotpassword_18sp_description_textsize">18sp</dimen>
+    <dimen name="et_16sp_textsize">16sp</dimen>
+    <dimen name="btn_8dp_padding">8dp</dimen>
+    <dimen name="btn_18sp_textsize">18sp</dimen>
+    <dimen name="iv_200dp_height">200dp</dimen>
+    <dimen name="tv_login_32dp_margintop">32dp</dimen>
+    <dimen name="tv_login_20sp_textsize">20sp</dimen>
+    <dimen name="til_login_16dp_margin">16dp</dimen>
+    <dimen name="et_login_16dp_padding">16dp</dimen>
+    <dimen name="et_login_16sp_textsize">16sp</dimen>
+    <dimen name="btn_login_16dp_margin">16dp</dimen>
+    <dimen name="btn_login_8dp_padding">8dp</dimen>
+    <dimen name="btn_login_18sp_textsize">18sp</dimen>
+    <dimen name="ll_login_64dp_margintop">64dp</dimen>
+    <dimen name="tv_login_16sp_textsize">16sp</dimen>
+    <dimen name="tv_login_5dp_padding">5dp</dimen>
+    <dimen name="et_16dp_padding">16dp</dimen>
+    <dimen name="tv_16sp_textsize">16sp</dimen>
+    <dimen name="tv_5dp_padding">5dp</dimen>
+</resources>

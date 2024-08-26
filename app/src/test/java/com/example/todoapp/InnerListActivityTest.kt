@@ -17,10 +17,10 @@ import org.robolectric.shadows.ShadowDialog
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.P])
-class MainActivityTest {
+class InnerListActivityTest {
 
     @get:Rule
-    val activityRule = ActivityScenarioRule(MainActivity::class.java)
+    val activityRule = ActivityScenarioRule(InnerListActivity::class.java)
 
     @Test
     fun testShowAddToDoDialog() {

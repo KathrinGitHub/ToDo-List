@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application") version "8.5.2"
     id("org.jetbrains.kotlin.android") version "1.9.0"
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -44,6 +45,10 @@ dependencies {
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.espresso.core.v361)
     implementation(libs.core)
+    implementation(libs.firebase.auth.ktx)
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation(libs.firebase.firestore.ktx)
+
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
