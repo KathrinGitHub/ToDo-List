@@ -2,6 +2,7 @@ package com.example.todoapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
@@ -16,11 +17,15 @@ class RegistrationActivity : BasicActivity() {
 
         val tvLogin: TextView = findViewById(R.id.tv_register_login)
         tvLogin.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
+            //startActivity(Intent(this, LoginActivity::class.java))
+            onBackPressedDispatcher.onBackPressed()
         }
 
-        //setupActionBar()
-        validateUserInformation()
+        setupActionBar()
+        val btnRegister : Button = findViewById(R.id.btn_register_register)
+        btnRegister.setOnClickListener {
+            registerNewUser()
+        }
     }
 
     private fun setupActionBar() {
