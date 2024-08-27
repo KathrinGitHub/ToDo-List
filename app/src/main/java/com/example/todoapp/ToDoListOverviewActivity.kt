@@ -39,10 +39,30 @@ class ToDoListOverviewActivity : BasicActivity() {
             startActivity(intent)
         }
 
+        toDoListAdapter.onDeleteClick = { toDoList ->
+            AlertDialog.Builder(this)
+                .setTitle("Delete List")
+                .setMessage("Are you sure you want to delete this list?")
+                .setPositiveButton("Yes") { _, _ ->
+                    deleteToDoList(toDoList)
+                }
+                .setNegativeButton("No", null)
+                .show()
+        }
+
         val fab: FloatingActionButton = findViewById(R.id.fabAddList)
         fab.setOnClickListener {
             showAddToDoListDialog()
         }
+    }
+
+    private fun deleteToDoList(toDoList: ToDoList) {
+        // Lösche die Liste aus der Cloud Firestore TODO
+        /* CloudFirestore().deleteListFromCloudFirestore(this, toDoList.id) {
+            toDoListAdapter.removeToDoList(toDoList)
+        } */
+        toDoListAdapter.removeToDoList(toDoList) // TODO Löschen sobald funktion fertig implementiwet ist
+
     }
 
     private fun showAddToDoListDialog() {

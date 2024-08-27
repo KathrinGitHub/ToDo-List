@@ -35,5 +35,7 @@
             android:exported="false"/>
         <activity android:name=".ToDoListOverviewActivity"
             android:exported="false"/>
+
+        <receiver android:name=".ReminderReceiver"/>
     </application>
 </manifest>
