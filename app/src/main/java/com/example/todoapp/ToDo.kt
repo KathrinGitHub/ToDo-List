@@ -1,6 +1,7 @@
 package com.example.todoapp
 
 data class ToDo(
+    val item_ID: String,
     var title: String,
     var description: String = "",
     var dueDate: Long? = null,

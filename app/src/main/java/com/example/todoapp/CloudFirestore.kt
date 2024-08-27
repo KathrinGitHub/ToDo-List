@@ -4,8 +4,10 @@ import android.content.Entity
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.toObject
@@ -24,7 +26,7 @@ class CloudFirestore {
                 registrationActivity.userRegistrationSuccess()
             }
             .addOnFailureListener { exp->
-                Log.e(registrationActivity.javaClass.name, "error occured", exp)
+                onFailure(registrationActivity, exp)
             }
     }
 
@@ -38,7 +40,7 @@ class CloudFirestore {
 
                 //save in the local storage who is currently logged in
                 val sharedPrefences = loginActivity.getSharedPreferences(
-                    Constants.FHJSTUDENTAPP_PREFERENCES, Context.MODE_PRIVATE)
+                    Constants.TODOAPP_PREFERENCES, Context.MODE_PRIVATE)
                 with(sharedPrefences.edit()){
                     putString(Constants.USERNAME_OF_LOGGED_USER, "${user.firstName}")
                     putString(Constants.UID_OF_LOGGED_USER, "${user.id}")
@@ -48,8 +50,7 @@ class CloudFirestore {
                 loginActivity.userLoggedInSuccess(user)
             }
             .addOnFailureListener { exp ->
-                loginActivity.showCustomSnackbar("an error occured :( \nPlease try again later", true)
-                Log.e(loginActivity.javaClass.name, "error occured", exp)
+                onFailure(loginActivity, exp)
             }
     }
 
@@ -60,6 +61,87 @@ class CloudFirestore {
 
         return ""
     }
+
+    fun getUserLists(toDoListOverviewActivity: ToDoListOverviewActivity) : ArrayList<ToDoList> {
+
+        var lists = ArrayList<ToDoList>()
+        val loggedInUserId = toDoListOverviewActivity.getSharedPreferences(Constants.TODOAPP_PREFERENCES, MODE_PRIVATE)
+            .getString(Constants.UID_OF_LOGGED_USER, "")
+
+        firestoreInstance
+            .collection(Constants.TABLENAME_LISTACCESS)
+            .whereEqualTo("user_ID", loggedInUserId)
+            .get()
+            .addOnSuccessListener { accessSnapshot ->
+                if (!accessSnapshot.isEmpty) {
+                    val listIds = accessSnapshot.documents.mapNotNull { it.getString("list_Id") }
+
+                    lists = fetchListsByIds(toDoListOverviewActivity, listIds)
+                }
+            }
+            .addOnFailureListener { exp ->
+                onFailure(toDoListOverviewActivity, exp)
+            }
+
+        return lists
+    }
+
+    private fun fetchListsByIds(toDoListOverviewActivity: ToDoListOverviewActivity, listIds: List<String>) : ArrayList<ToDoList> {
+
+        var lists = ArrayList<ToDoList>()
+
+        if (listIds.isNotEmpty()) {
+            // Query the lists collection for documents matching the retrieved listIds
+            firestoreInstance
+                .collection(Constants.TABLENAME_LIST)
+                .whereIn(FieldPath.documentId(), listIds).get()
+                .addOnSuccessListener { listsSnapshot ->
+                    if (!listsSnapshot.isEmpty) {
+                        lists = listsSnapshot.toObjects(ToDoList::class.java) as ArrayList<ToDoList>
+                    }
+                }
+                .addOnFailureListener { exp ->
+                    onFailure(toDoListOverviewActivity, exp)
+                }
+        }
+        return lists
+    }
+
+    fun saveListOnCloudFirestore(toDoListOverviewActivity: ToDoListOverviewActivity, toDoList: ToDoList) {
+
+        val loggedInUserId = toDoListOverviewActivity.getSharedPreferences(Constants.TODOAPP_PREFERENCES, MODE_PRIVATE)
+            .getString(Constants.UID_OF_LOGGED_USER, "")
+
+        firestoreInstance
+            .collection(Constants.TABLENAME_LIST)
+            .document(toDoList.list_ID)
+            .set(toDoList, SetOptions.merge())
+            .addOnSuccessListener {
+                val combinedID = toDoList.list_ID + loggedInUserId
+                val accessData: Access = Access(toDoList.list_ID, loggedInUserId.toString())
+                firestoreInstance
+                    .collection(Constants.TABLENAME_LISTACCESS)
+                    .document(combinedID)
+                    .set(accessData, SetOptions.merge())
+                    .addOnSuccessListener {
+                        // TODO:
+                        //toDoListOverviewActivity.saveSuccess()
+                    }.addOnFailureListener { exception ->
+                        onFailure(toDoListOverviewActivity, exception)
+                    }
+            }
+            .addOnFailureListener { exp->
+                onFailure(toDoListOverviewActivity, exp)
+            }
+
+
+    }
+
+    private fun onFailure(activity: BasicActivity, exp: Exception) {
+        activity.showCustomSnackbar("an error occured :( \nPlease try again later", true)
+        Log.e(activity.javaClass.name, "error occured", exp)
+    }
+
 
     /*
     fun initAllLists(mainActivity: MainActivity) {
