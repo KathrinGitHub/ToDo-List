@@ -20,19 +20,24 @@ class ToDoListOverviewActivity : BasicActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_todolist_overview)
 
-        // TODO: comment in as soon as dummy data is in the database
-        toDoLists = CloudFirestore().getUserLists(this)
+        CloudFirestore().getUserLists(this) { lists ->
+            toDoLists.clear()
+            toDoLists.addAll(lists)
+            toDoListAdapter.notifyDataSetChanged()
+        }
 
-        toDoListAdapter = ToDoListAdapter(toDoLists) { selectedList ->
+        toDoListAdapter = ToDoListAdapter(toDoLists)
+
+        val recyclerView: RecyclerView = findViewById(R.id.recyclerViewToDoLists)
+        recyclerView.adapter = toDoListAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+         toDoListAdapter.onClick = { selectedList ->
             val intent = Intent(this, InnerListActivity::class.java).apply {
                 putExtra("list_name", selectedList.name)
             }
             startActivity(intent)
         }
-
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerViewToDoLists)
-        recyclerView.adapter = toDoListAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
 
         val fab: FloatingActionButton = findViewById(R.id.fabAddList)
         fab.setOnClickListener {

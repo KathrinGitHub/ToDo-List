@@ -8,9 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class ToDoListAdapter(
-    private val toDoLists: MutableList<ToDoList>,
-    private val onClick: (ToDoList) -> Unit
+    private val toDoLists: MutableList<ToDoList>
 ) : RecyclerView.Adapter<ToDoListAdapter.ToDoListViewHolder>() {
+
+    lateinit var onClick: (ToDoList) -> Unit
 
     inner class ToDoListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val listNameTextView: TextView = itemView.findViewById(R.id.textViewListName)

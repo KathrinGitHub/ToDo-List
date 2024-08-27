@@ -1,12 +1,12 @@
 package com.example.todoapp
 
 data class ToDoList(
-    var list_ID: String,
-    var name: String,
-    var todos: MutableList<ToDo>,
-    var creator_ID: String,
+    var list_ID: String = "",
+    var name: String = "",
+    var todos: MutableList<ToDo> = mutableListOf(),
+    var creator_ID: String = "",
 
-) {
+    ) {
     init {
         addList(this)
     }

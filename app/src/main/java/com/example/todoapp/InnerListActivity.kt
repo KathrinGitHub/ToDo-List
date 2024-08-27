@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -46,6 +47,8 @@ class InnerListActivity : AppCompatActivity() {
             showAddToDoDialog()
         }
         addSampleToDo()
+
+        setupActionBar()
     }
 
     private fun addSampleToDo() {
@@ -161,6 +164,20 @@ class InnerListActivity : AppCompatActivity() {
         notificationManager.createNotificationChannel(channel)
     }
 
+    private fun setupActionBar() {
+        val toolbarRegistration: Toolbar = findViewById(R.id.toolbar_items_activity)
+        setSupportActionBar(toolbarRegistration)
 
+        val actionBar = supportActionBar
+        if(actionBar != null) {
+            // actionbar element is clickable + add followning icon "<" (default: left)
+            actionBar.setDisplayHomeAsUpEnabled(true)
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24)
+        }
+
+        toolbarRegistration.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+    }
 
 }

@@ -43,4 +43,7 @@
     <string name="logout"><u>Logout</u></string>
     <string name="plant_with_same_name_exists">There is already a Plant with this name!</string>
     <string name="logged_in">You are logged in :)</string>
+
+    <!-- INNER LIST SCREEN -->
+    <string name="items_title_text">ToDo</string>
 </resources>

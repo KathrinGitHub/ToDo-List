@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 
 class CloudFirestore {
@@ -62,7 +63,7 @@ class CloudFirestore {
         return ""
     }
 
-    fun getUserLists(toDoListOverviewActivity: ToDoListOverviewActivity) : ArrayList<ToDoList> {
+    fun getUserLists(toDoListOverviewActivity: ToDoListOverviewActivity, callback: (ArrayList<ToDoList>) -> Unit){
 
         var lists = ArrayList<ToDoList>()
         val loggedInUserId = toDoListOverviewActivity.getSharedPreferences(Constants.TODOAPP_PREFERENCES, MODE_PRIVATE)
@@ -74,37 +75,40 @@ class CloudFirestore {
             .get()
             .addOnSuccessListener { accessSnapshot ->
                 if (!accessSnapshot.isEmpty) {
-                    val listIds = accessSnapshot.documents.mapNotNull { it.getString("list_Id") }
+                    val listIds = accessSnapshot.documents.mapNotNull { it.getString("list_ID") }
 
-                    lists = fetchListsByIds(toDoListOverviewActivity, listIds)
+                    fetchListsByIds(toDoListOverviewActivity, listIds) { callbackLists ->
+                        lists = callbackLists
+                        callback(lists)
+                    }
                 }
             }
             .addOnFailureListener { exp ->
                 onFailure(toDoListOverviewActivity, exp)
+                callback(lists)
             }
-
-        return lists
     }
 
-    private fun fetchListsByIds(toDoListOverviewActivity: ToDoListOverviewActivity, listIds: List<String>) : ArrayList<ToDoList> {
+    private fun fetchListsByIds(toDoListOverviewActivity: ToDoListOverviewActivity, listIds: List<String>, callback: (ArrayList<ToDoList>) -> Unit) {
 
         var lists = ArrayList<ToDoList>()
 
         if (listIds.isNotEmpty()) {
             // Query the lists collection for documents matching the retrieved listIds
-            firestoreInstance
-                .collection(Constants.TABLENAME_LIST)
-                .whereIn(FieldPath.documentId(), listIds).get()
-                .addOnSuccessListener { listsSnapshot ->
-                    if (!listsSnapshot.isEmpty) {
-                        lists = listsSnapshot.toObjects(ToDoList::class.java) as ArrayList<ToDoList>
+            listIds.forEach { listId ->
+                firestoreInstance
+                    .collection(Constants.TABLENAME_LIST)
+                    .whereEqualTo("list_ID", listId).get()
+                    .addOnSuccessListener { listsSnapshot ->
+                        lists.add(listsSnapshot.first().toObject(ToDoList::class.java))
+                        callback(lists)
                     }
-                }
-                .addOnFailureListener { exp ->
-                    onFailure(toDoListOverviewActivity, exp)
-                }
+                    .addOnFailureListener { exp ->
+                        onFailure(toDoListOverviewActivity, exp)
+                        callback(lists)
+                    }
+            }
         }
-        return lists
     }
 
     fun saveListOnCloudFirestore(toDoListOverviewActivity: ToDoListOverviewActivity, toDoList: ToDoList) {

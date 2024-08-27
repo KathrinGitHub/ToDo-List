@@ -7,14 +7,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".InnerListActivity">
-<!--
+
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbar_items_activity"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
--->
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/items_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="@string/items_title_text"
+            android:textSize="@dimen/tv_20sp_textsize" />
+    </androidx.appcompat.widget.Toolbar>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
