@@ -14,6 +14,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -41,6 +42,9 @@ class InnerListActivity : AppCompatActivity() {
         createNotificationChannel()
 
         val listName = intent.getStringExtra("list_name")
+        val titleTextView: TextView = findViewById(R.id.items_title)
+        titleTextView.text = listName
+
         selectedToDoList = getToDoListByName(listName)
 
         recyclerView = findViewById(R.id.recyclerView)
