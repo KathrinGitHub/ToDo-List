@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import android.widget.ImageView
+
 
 class ToDoAdapter(
     private val todos: MutableList<ToDo>
@@ -19,7 +21,7 @@ class ToDoAdapter(
         val titleTextView: TextView = itemView.findViewById(R.id.textViewTitle)
         val descriptionTextView: TextView = itemView.findViewById(R.id.textViewDescription)
         val dueDateTextView: TextView = itemView.findViewById(R.id.textViewDueDate)
-        val priorityTextView: TextView = itemView.findViewById(R.id.textViewPriority)
+        val priorityImageView: ImageView = itemView.findViewById(R.id.imageViewPriority)
         val checkBox: CheckBox = itemView.findViewById(R.id.checkBox)
     }
 
@@ -32,12 +34,15 @@ class ToDoAdapter(
         val todo = todos[position]
         holder.titleTextView.text = todo.title
         holder.descriptionTextView.text = todo.description
-        holder.dueDateTextView.text = todo.dueDate?.let { formatDate(it) } ?: "No due date"
-        holder.priorityTextView.text = when (todo.priority) {
-            2 -> "High"
-            1 -> "Medium"
-            else -> "Low"
+        holder.dueDateTextView.text = todo.dueDate?.let { formatDate(it) } ?: ""
+
+        val priorityImageResId = when (todo.priority) {
+            2 -> R.drawable.baseline_keyboard_arrow_up_24   // Hohe Priorität
+            1 -> R.drawable.baseline_horizontal_rule_24 // Mittlere Priorität
+            else -> R.drawable.baseline_keyboard_arrow_down_24  // Niedrige Priorität
         }
+        holder.priorityImageView.setImageResource(priorityImageResId)
+
         holder.checkBox.setOnCheckedChangeListener(null)
         holder.checkBox.isChecked = todo.isDone
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
@@ -56,7 +61,5 @@ class ToDoAdapter(
         todos.add(todo)
         notifyItemInserted(todos.size -1)
         Log.d("ToDoAdapter", "ToDo hinzugefügt: $todo")
-        notifyDataSetChanged()
-
     }
 }

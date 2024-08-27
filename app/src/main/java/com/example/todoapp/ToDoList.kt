@@ -41,6 +41,9 @@ data class ToDoList(
             return allLists
         }
 
+        fun findByName(name: String): ToDoList? {
+            return allLists.find { it.name == name }
+        }
 
     }
 }
