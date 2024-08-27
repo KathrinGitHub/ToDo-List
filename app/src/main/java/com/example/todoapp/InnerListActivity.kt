@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.Calendar
 import java.util.UUID
+import android.widget.ImageView
+
 
 
 class InnerListActivity : AppCompatActivity() {
@@ -79,12 +81,22 @@ class InnerListActivity : AppCompatActivity() {
 
     private fun getToDoListByName(name: String?): ToDoList? {
         return if (name != null) {
-            null
+            ToDoList.findByName(name) ?: ToDoList(
+                list_ID = UUID.randomUUID().toString(),
+                name = name,
+                todos = mutableListOf<ToDo>(),
+                creator_ID = "default_creator"
+            )
         } else {
-            //ToDoList(name ?: "Default List", mutableListOf())
-            null
+            ToDoList(
+                list_ID = UUID.randomUUID().toString(),
+                name = "Unnamed List",
+                todos = mutableListOf<ToDo>(),
+                creator_ID = "default_creator"
+            )
         }
     }
+
 
     private fun showAddToDoDialog() {
         val builder = AlertDialog.Builder(this)
@@ -127,9 +139,9 @@ class InnerListActivity : AppCompatActivity() {
                     dueDate = selectedDate,
                     priority = priority
                 )
-                selectedToDoList?.todos?.add(todo)
-                toDoAdapter.notifyDataSetChanged()
-                //toDoAdapter.addToDo(todo)
+                //selectedToDoList?.todos?.add(todo)
+                //toDoAdapter.notifyDataSetChanged()
+                toDoAdapter.addToDo(todo)
 
                 Log.d("MainActivity", "ToDo hinzugefügt:")
                 Log.d("MainActivity", "Title: ${todo.title}")
@@ -160,7 +172,4 @@ class InnerListActivity : AppCompatActivity() {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
-
-
-
 }

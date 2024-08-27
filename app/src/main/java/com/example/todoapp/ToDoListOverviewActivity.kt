@@ -53,10 +53,13 @@ class ToDoListOverviewActivity : BasicActivity() {
             if (listName.isNotEmpty()) {
                 val loggedInUserId = getSharedPreferences(Constants.TODOAPP_PREFERENCES, MODE_PRIVATE)
                     .getString(Constants.UID_OF_LOGGED_USER, "")
-                val toDoList = ToDoList(UUID.randomUUID().toString(), listName, mutableListOf(), loggedInUserId.toString())
+                val toDoList = ToDoList(
+                    UUID.randomUUID().toString(),
+                    listName,
+                    mutableListOf(),
+                    loggedInUserId.toString()
+                )
                 CloudFirestore().saveListOnCloudFirestore(this, toDoList)
-                //toDoLists.add(toDoList)
-                //toDoListAdapter.notifyItemInserted(toDoLists.size - 1)
                 toDoListAdapter.addToDoList(toDoList)
             }
             dialog.dismiss()
