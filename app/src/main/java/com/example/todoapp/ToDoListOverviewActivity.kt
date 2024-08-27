@@ -9,15 +9,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.util.UUID
 
-class ToDoListOverviewActivity : AppCompatActivity() {
+class ToDoListOverviewActivity : BasicActivity() {
 
     private lateinit var toDoListAdapter: ToDoListAdapter
-    private val toDoLists = mutableListOf<ToDoList>()
+    private var toDoLists = mutableListOf<ToDoList>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_todolist_overview)
+
+        // TODO: comment in as soon as dummy data is in the database
+        toDoLists = CloudFirestore().getUserLists(this)
 
         toDoListAdapter = ToDoListAdapter(toDoLists) { selectedList ->
             val intent = Intent(this, InnerListActivity::class.java).apply {
@@ -47,11 +51,13 @@ class ToDoListOverviewActivity : AppCompatActivity() {
         builder.setPositiveButton("Add") { dialog, _ ->
             val listName = input.text.toString()
             if (listName.isNotEmpty()) {
-                val toDoList = ToDoList(listName, mutableListOf())
+                val loggedInUserId = getSharedPreferences(Constants.TODOAPP_PREFERENCES, MODE_PRIVATE)
+                    .getString(Constants.UID_OF_LOGGED_USER, "")
+                val toDoList = ToDoList(UUID.randomUUID().toString(), listName, mutableListOf(), loggedInUserId.toString())
+                CloudFirestore().saveListOnCloudFirestore(this, toDoList)
                 //toDoLists.add(toDoList)
                 //toDoListAdapter.notifyItemInserted(toDoLists.size - 1)
                 toDoListAdapter.addToDoList(toDoList)
-
             }
             dialog.dismiss()
         }

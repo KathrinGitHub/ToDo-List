@@ -67,7 +67,7 @@ class LoginActivity : BasicActivity() {
 
     fun userLoggedInSuccess(user: User){
         showCustomSnackbar(getString(R.string.logged_in), false)
-        val intent = Intent(this, InnerListActivity::class.java)
+        val intent = Intent(this, ToDoListOverviewActivity::class.java)
         Log.d("todo-list", "start inner list")
         startActivity(intent)
         finish()

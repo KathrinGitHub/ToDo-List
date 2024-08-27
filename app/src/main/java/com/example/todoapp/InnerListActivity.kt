@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.Calendar
+import java.util.UUID
 
 
 class InnerListActivity : AppCompatActivity() {
@@ -49,6 +50,7 @@ class InnerListActivity : AppCompatActivity() {
 
     private fun addSampleToDo() {
         val sampleTodo = ToDo(
+            item_ID = "1A",
             title = "Sample ToDo",
             description = "This is a sample todo item.",
             dueDate = System.currentTimeMillis(), // Aktuelles Datum
@@ -79,7 +81,8 @@ class InnerListActivity : AppCompatActivity() {
         return if (name != null) {
             null
         } else {
-            ToDoList(name ?: "Default List", mutableListOf())
+            //ToDoList(name ?: "Default List", mutableListOf())
+            null
         }
     }
 
@@ -118,6 +121,7 @@ class InnerListActivity : AppCompatActivity() {
 
             if (title.isNotEmpty()) {
                 val todo = ToDo(
+                    item_ID = UUID.randomUUID().toString(),
                     title = title,
                     description = description,
                     dueDate = selectedDate,
