@@ -13,10 +13,8 @@ class ToDoListAdapter(
 ) : RecyclerView.Adapter<ToDoListAdapter.ToDoListViewHolder>() {
 
     lateinit var onClick: (ToDoList) -> Unit
-    lateinit var onDeleteClick: (ToDoList) -> Unit
 
     inner class ToDoListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val deleteIcon: ImageView = itemView.findViewById(R.id.imageViewDelete)
         val listNameTextView: TextView = itemView.findViewById(R.id.textViewListName)
     }
 
@@ -29,7 +27,6 @@ class ToDoListAdapter(
         val toDoList = toDoLists[position]
         holder.listNameTextView.text = toDoList.name
         holder.listNameTextView.setOnClickListener { onClick(toDoList) }
-        holder.deleteIcon.setOnClickListener { onDeleteClick(toDoList) }
     }
 
     override fun getItemCount() = toDoLists.size
@@ -39,13 +36,6 @@ class ToDoListAdapter(
         notifyItemInserted(toDoLists.size - 1)
     }
 
-    fun removeToDoList(toDoList: ToDoList) {
-        val position = toDoLists.indexOf(toDoList)
-        if (position != -1) {
-            toDoLists.removeAt(position)
-            notifyItemRemoved(position)
-        }
-    }
 }
 
 

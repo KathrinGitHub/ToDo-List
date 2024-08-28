@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
@@ -25,6 +26,8 @@ import java.util.Calendar
 import java.util.UUID
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.example.todoapp.CloudFirestore
+
 
 
 class InnerListActivity : AppCompatActivity() {
@@ -39,11 +42,14 @@ class InnerListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_inner_list)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         createNotificationChannel()
 
         val listName = intent.getStringExtra("list_name")
         val titleTextView: TextView = findViewById(R.id.items_title)
         titleTextView.text = listName
+
+        val cloudFirestore = CloudFirestore()
 
         selectedToDoList = getToDoListByName(listName)
 
@@ -64,26 +70,74 @@ class InnerListActivity : AppCompatActivity() {
         setupActionBar()
     }
 
-    private fun addSampleToDo() {
-        val sampleTodo = ToDo(
-            item_ID = "1A",
-            title = "Sample ToDo",
-            description = "<- Swipe to delete",
-            dueDate = System.currentTimeMillis(), // Aktuelles Datum
-            priority = 1, // Medium
-            isDone = false
-        )
-        toDoAdapter.addToDo(sampleTodo)
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_inner_list, menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_share -> {
+                shareList()
+                true
+            }
+            R.id.action_delete -> {
+                deleteList()
+                true
+            }
             android.R.id.home -> {
                 onBackPressed()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+
+    private fun shareList() {
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "Sharing the list: ${selectedToDoList?.name}")
+            type = "text/plain"
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share via"))
+    }
+
+    private fun deleteList() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Delete List")
+        builder.setMessage("Are you sure you want to delete this list?")
+        builder.setPositiveButton("Yes") { _, _ ->
+            if (selectedToDoList != null) {
+                CloudFirestore().deleteListFromCloudFirestore(this, selectedToDoList!!)
+                finish()
+            } else {
+                Toast.makeText(this, "No list selected", Toast.LENGTH_SHORT).show()
+            }
+
+                // Zurück zur Übersicht Activity navigieren
+                val intent = Intent(this, ToDoListOverviewActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+        }
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.show()
+    }
+
+    private fun addSampleToDo() {
+        val sampleTodo = ToDo(
+            item_ID = "1A",
+            title = "Sample ToDo",
+            description = "<- Swipe to delete",
+            dueDate = System.currentTimeMillis(),
+            priority = 1, // Medium
+            isDone = false
+        )
+        toDoAdapter.addToDo(sampleTodo)
     }
 
     override fun onBackPressed() {

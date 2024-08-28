@@ -5,11 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
-import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.UUID
+import com.example.todoapp.CloudFirestore
+
 
 class ToDoListOverviewActivity : BasicActivity() {
 
@@ -20,10 +22,13 @@ class ToDoListOverviewActivity : BasicActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_todolist_overview)
 
+        val cloudFirestore = CloudFirestore()
+
         CloudFirestore().getUserLists(this) { lists ->
             toDoLists.clear()
             toDoLists.addAll(lists)
             toDoListAdapter.notifyDataSetChanged()
+
         }
 
         toDoListAdapter = ToDoListAdapter(toDoLists)
@@ -32,37 +37,64 @@ class ToDoListOverviewActivity : BasicActivity() {
         recyclerView.adapter = toDoListAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-         toDoListAdapter.onClick = { selectedList ->
+        toDoListAdapter.onClick = { selectedList ->
             val intent = Intent(this, InnerListActivity::class.java).apply {
                 putExtra("list_name", selectedList.name)
             }
             startActivity(intent)
         }
 
-        toDoListAdapter.onDeleteClick = { toDoList ->
-            AlertDialog.Builder(this)
-                .setTitle("Delete List")
-                .setMessage("Are you sure you want to delete this list?")
-                .setPositiveButton("Yes") { _, _ ->
-                    deleteToDoList(toDoList)
-                }
-                .setNegativeButton("No", null)
-                .show()
-        }
-
         val fab: FloatingActionButton = findViewById(R.id.fabAddList)
         fab.setOnClickListener {
             showAddToDoListDialog()
         }
+        setupSwipeToDelete(recyclerView, cloudFirestore)
     }
 
-    private fun deleteToDoList(toDoList: ToDoList) {
-        // Lösche die Liste aus der Cloud Firestore TODO
-        /* CloudFirestore().deleteListFromCloudFirestore(this, toDoList.id) {
-            toDoListAdapter.removeToDoList(toDoList)
-        } */
-        toDoListAdapter.removeToDoList(toDoList) // TODO Löschen sobald funktion fertig implementiwet ist
+    override fun onResume() {
+        super.onResume()
+        CloudFirestore().getUserLists(this) { lists ->
+            toDoLists.clear()
+            toDoLists.addAll(lists)
+            toDoListAdapter.notifyDataSetChanged()
+        }
+    }
 
+    private fun setupSwipeToDelete(recyclerView: RecyclerView,  cloudFirestore: CloudFirestore) {
+        val itemTouchHelperCallback =
+            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val position = viewHolder.adapterPosition
+                    val listToDelete = toDoLists[position]
+
+                    AlertDialog.Builder(this@ToDoListOverviewActivity)
+                        .setTitle("Delete List")
+                        .setMessage("Are you sure you want to delete this list?")
+                        .setPositiveButton("Yes") { _, _ ->
+                            cloudFirestore.deleteListFromCloudFirestore(
+                                this@ToDoListOverviewActivity,
+                                listToDelete
+                            )
+                            toDoLists.removeAt(position)
+                            toDoListAdapter.notifyItemRemoved(position)
+                        }
+                        .setNegativeButton("No") { dialog, _ ->
+                            dialog.dismiss()
+                            toDoListAdapter.notifyItemChanged(position)
+                        }
+                        .show()
+                }
+            }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
     private fun showAddToDoListDialog() {
@@ -76,8 +108,9 @@ class ToDoListOverviewActivity : BasicActivity() {
         builder.setPositiveButton("Add") { dialog, _ ->
             val listName = input.text.toString()
             if (listName.isNotEmpty()) {
-                val loggedInUserId = getSharedPreferences(Constants.TODOAPP_PREFERENCES, MODE_PRIVATE)
-                    .getString(Constants.UID_OF_LOGGED_USER, "")
+                val loggedInUserId =
+                    getSharedPreferences(Constants.TODOAPP_PREFERENCES, MODE_PRIVATE)
+                        .getString(Constants.UID_OF_LOGGED_USER, "")
                 val toDoList = ToDoList(
                     UUID.randomUUID().toString(),
                     listName,

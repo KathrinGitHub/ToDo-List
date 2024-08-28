@@ -146,6 +146,24 @@ class CloudFirestore {
         Log.e(activity.javaClass.name, "error occured", exp)
     }
 
+    // TODO wird nicht aufgerufen, keine Ahnung wieso. bite anschauen :)
+    fun deleteListFromCloudFirestore(context: Context, toDoList: ToDoList) {
+        val db = FirebaseFirestore.getInstance()
+        val listId = toDoList.list_ID
+
+        db.collection("toDoLists")
+            .document(listId)
+            .delete()
+            .addOnSuccessListener {
+                Log.d("CloudFirestore", "List successfully deleted")
+                Toast.makeText(context, "List deleted successfully", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Log.w("CloudFirestore", "Error deleting list", e)
+                Toast.makeText(context, "Failed to delete list", Toast.LENGTH_SHORT).show()
+            }
+    }
+
 
     /*
     fun initAllLists(mainActivity: MainActivity) {

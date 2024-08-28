@@ -32,10 +32,10 @@
         <activity android:name=".RegistrationActivity"
             android:exported="false"/>
         <activity android:name=".InnerListActivity"
-            android:exported="false"/>
-        <activity android:name=".ToDoListOverviewActivity"
-            android:exported="false"/>
-
+            android:exported="false"
+            android:label=""/>
+        <activity android:name=".ToDoListOverviewActivity"/>
+            <!--android:exported="false"/>-->
         <receiver android:name=".ReminderReceiver"/>
     </application>
 </manifest>
