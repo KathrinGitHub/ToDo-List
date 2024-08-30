@@ -146,20 +146,31 @@ class CloudFirestore {
         Log.e(activity.javaClass.name, "error occured", exp)
     }
 
-    // TODO wird nicht aufgerufen, keine Ahnung wieso. bite anschauen :)
     fun deleteListFromCloudFirestore(context: Context, toDoList: ToDoList) {
-        val db = FirebaseFirestore.getInstance()
-        val listId = toDoList.list_ID
 
-        db.collection("toDoLists")
-            .document(listId)
+        val loggedInUserId = context.getSharedPreferences(Constants.TODOAPP_PREFERENCES, MODE_PRIVATE)
+            .getString(Constants.UID_OF_LOGGED_USER, "")
+        val combinedID = toDoList.list_ID + loggedInUserId
+
+        firestoreInstance
+            .collection(Constants.TABLENAME_LIST)
+            .document(toDoList.list_ID)
             .delete()
             .addOnSuccessListener {
-                Log.d("CloudFirestore", "List successfully deleted")
-                Toast.makeText(context, "List deleted successfully", Toast.LENGTH_SHORT).show()
+                firestoreInstance
+                    .collection(Constants.TABLENAME_LISTACCESS)
+                    .document(combinedID)
+                    .delete()
+                    .addOnSuccessListener {
+                        Log.d("CloudFirestore", "List successfully deleted")
+                        Toast.makeText(context, "List deleted successfully", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("CloudFirestore", "Error deleting access entry", e)
+                    }
             }
             .addOnFailureListener { e ->
-                Log.w("CloudFirestore", "Error deleting list", e)
+                Log.e("CloudFirestore", "Error deleting list", e)
                 Toast.makeText(context, "Failed to delete list", Toast.LENGTH_SHORT).show()
             }
     }
