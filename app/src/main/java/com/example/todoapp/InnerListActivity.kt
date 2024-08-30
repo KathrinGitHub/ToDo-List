@@ -26,8 +26,6 @@ import java.util.Calendar
 import java.util.UUID
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.example.todoapp.CloudFirestore
-
 
 
 class InnerListActivity : AppCompatActivity() {
@@ -49,7 +47,6 @@ class InnerListActivity : AppCompatActivity() {
         val titleTextView: TextView = findViewById(R.id.items_title)
         titleTextView.text = listName
 
-        val cloudFirestore = CloudFirestore()
 
         selectedToDoList = getToDoListByName(listName)
 
@@ -141,6 +138,7 @@ class InnerListActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         val intent = Intent(this, ToDoListOverviewActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)

@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application") version "8.5.2"
+    id("com.android.application")
     id("org.jetbrains.kotlin.android") version "1.9.0"
     id("com.google.gms.google-services")
 }
@@ -38,35 +38,19 @@ android {
 
 dependencies {
 
-
-    implementation(libs.androidx.core.ktx.v1101)
-    implementation(libs.androidx.appcompat.v170)
-    implementation(libs.material.v180)
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.espresso.core.v361)
-    implementation(libs.core)
     implementation(libs.firebase.auth.ktx)
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation(libs.firebase.firestore.ktx)
-
-
-    testImplementation(libs.junit)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.kotlin.test)
-    testImplementation(libs.robolectric.v48)
-    testImplementation(libs.androidx.core)
-    testImplementation(libs.androidx.junit.v121)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.inline)
-
-    androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.androidx.junit.v121)
-    androidTestImplementation(libs.androidx.espresso.contrib)
-    androidTestImplementation(libs.androidx.runner)
-    androidTestImplementation(libs.androidx.rules)
-    androidTestImplementation(libs.hamcrest)
-
-
-
+    androidTestImplementation(libs.androidx.espresso.core.v361)
+    implementation(libs.material.v1120)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.core.v500)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation (libs.mockito.inline.v500)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    testImplementation(libs.kotlinx.coroutines.test)
 
 }

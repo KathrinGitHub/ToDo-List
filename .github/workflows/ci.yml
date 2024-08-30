@@ -33,14 +33,35 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Download Dependencies
+        run: ./gradlew build --no-daemon
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Start Android Emulator
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y android-tools-adb
+          ./emulator-headless -avd test -no-window -no-audio -no-boot-anim &
+          adb wait-for-device
+          adb shell input keyevent 82 &
+        env:
+          API_LEVEL: 30
+          TARGET: default
+          ABI: x86_64
+          PROFILE: test
 
       - name: Run Unit Tests
-        run: ./gradlew test
+        run: ./gradlew testDebugUnitTest --no-daemon
 
       - name: Run Instrumented Tests
-        run: ./gradlew connectedAndroidTest
+        run: ./gradlew connectedAndroidTest --no-daemon
+
+      - name: Stop Android Emulator
+        if: always()
+        run: adb emu kill
+
+      - name: Clear Emulator AVD files
+        if: always()
+        run: rm -rf ${{ github.workspace }}/.android/avdmon
