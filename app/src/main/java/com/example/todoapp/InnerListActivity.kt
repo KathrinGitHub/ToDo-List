@@ -63,7 +63,7 @@ class InnerListActivity : AppCompatActivity() {
         if (toDoAdapter.itemCount == 0) {
             addSampleToDo()
         }
-        setupSwipeToDelete()
+        setupSwipeToDelete(this)
         setupActionBar()
     }
 
@@ -212,6 +212,7 @@ class InnerListActivity : AppCompatActivity() {
                     priority = priority
                 )
                 toDoAdapter.addToDo(todo)
+                CloudFirestore().updateToDoItems(this, selectedToDoList!!, true)
 
                 if (checkBoxReminder.isChecked) {
                     val reminderTime = spinnerReminderTime.selectedItemPosition
@@ -303,7 +304,7 @@ class InnerListActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupSwipeToDelete() {
+    private fun setupSwipeToDelete(context: Context) {
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -316,6 +317,7 @@ class InnerListActivity : AppCompatActivity() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 (recyclerView.adapter as ToDoAdapter).removeToDoAt(position)
+                CloudFirestore().updateToDoItems(context, selectedToDoList!!, false)
             }
         }
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)

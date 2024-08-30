@@ -28,7 +28,6 @@ class ToDoListOverviewActivity : BasicActivity() {
             toDoLists.clear()
             toDoLists.addAll(lists)
             toDoListAdapter.notifyDataSetChanged()
-
         }
 
         toDoListAdapter = ToDoListAdapter(toDoLists)
