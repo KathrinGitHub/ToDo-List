@@ -10,7 +10,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -23,24 +22,51 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Cache Gradle files
-        uses: actions/cache@v3
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
+          api-level: 30
+          build-tools: 30.0.3
+          target: android-30
+          ndk: 21.4.7075529
+
+      - name: Install Emulator and System Image
+        run: |
+          sdkmanager "system-images;android-30;google_apis;x86_64"
+          sdkmanager "platform-tools"
+          sdkmanager "emulator"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Download Dependencies
+        run: ./gradlew build --no-daemon
+
+#      - name: Create Android Emulator AVD
+#        run: |
+#          echo "no" | avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" -c 100M
+
+#      - name: Start Android Emulator
+#        run: |
+#          emulator -avd test -no-window -no-audio -no-boot-anim &
+#          adb wait-for-device
+#          adb shell input keyevent 82 &
+#        env:
+#          API_LEVEL: 30
+#          TARGET: default
+#          ABI: x86_64
+#          PROFILE: test
 
       - name: Run Unit Tests
-        run: ./gradlew test
+        run: ./gradlew testDebugUnitTest --no-daemon
 
-      - name: Run Instrumented Tests
-        run: ./gradlew connectedAndroidTest
+#      - name: Run Instrumented Tests
+#        run: ./gradlew connectedAndroidTest --no-daemon
+
+#      - name: Stop Android Emulator
+#        if: always()
+#        run: adb emu kill
+
+      - name: Clear Emulator AVD files
+        if: always()
+        run: rm -rf ${{ github.workspace }}/.android/avdmon

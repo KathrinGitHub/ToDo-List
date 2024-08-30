@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import android.widget.ImageView
 
 
 class ToDoAdapter(
@@ -61,5 +61,11 @@ class ToDoAdapter(
         todos.add(todo)
         notifyItemInserted(todos.size -1)
         Log.d("ToDoAdapter", "ToDo hinzugefügt: $todo")
+    }
+
+    fun removeToDoAt(position: Int) {
+        todos.removeAt(position)
+        notifyItemRemoved(position)
+        Log.d("ToDoAdapter", "ToDo entfernt an Position: $position")
     }
 }

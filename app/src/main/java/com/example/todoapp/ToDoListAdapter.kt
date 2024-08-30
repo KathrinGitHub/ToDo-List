@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -11,10 +12,10 @@ class ToDoListAdapter(
     private val toDoLists: MutableList<ToDoList>
 ) : RecyclerView.Adapter<ToDoListAdapter.ToDoListViewHolder>() {
 
-    lateinit var onClick: (ToDoList) -> Unit
+    var onClick: ((ToDoList) -> Unit)? = null
 
     inner class ToDoListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val listNameTextView: TextView = itemView.findViewById(R.id.textViewListName)
+        var listNameTextView: TextView = itemView.findViewById(R.id.textViewListName)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoListViewHolder {
@@ -25,7 +26,7 @@ class ToDoListAdapter(
     override fun onBindViewHolder(holder: ToDoListViewHolder, position: Int) {
         val toDoList = toDoLists[position]
         holder.listNameTextView.text = toDoList.name
-        holder.listNameTextView.setOnClickListener { onClick(toDoList) }
+        holder.listNameTextView.setOnClickListener { onClick?.invoke(toDoList) }
     }
 
     override fun getItemCount() = toDoLists.size
@@ -33,8 +34,8 @@ class ToDoListAdapter(
     fun addToDoList(toDoList: ToDoList) {
         toDoLists.add(toDoList)
         notifyItemInserted(toDoLists.size - 1)
-
     }
+
 }
 
 

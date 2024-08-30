@@ -1,15 +1,21 @@
 package com.example.todoapp
+import android.app.AlarmManager
 import android.app.DatePickerDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -18,29 +24,34 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.Calendar
 import java.util.UUID
-import android.widget.ImageView
-
+import android.widget.Toast
+import androidx.recyclerview.widget.ItemTouchHelper
 
 
 class InnerListActivity : AppCompatActivity() {
 
     private lateinit var toDoAdapter: ToDoAdapter
     private var selectedToDoList: ToDoList? = null
-    private val todos = mutableListOf<ToDo>()
+    private lateinit var recyclerView: RecyclerView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inner_list)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         createNotificationChannel()
 
         val listName = intent.getStringExtra("list_name")
+        val titleTextView: TextView = findViewById(R.id.items_title)
+        titleTextView.text = listName
+
+
         selectedToDoList = getToDoListByName(listName)
 
+        recyclerView = findViewById(R.id.recyclerView)
         toDoAdapter = ToDoAdapter(selectedToDoList?.todos ?: mutableListOf())
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         recyclerView.adapter = toDoAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -48,25 +59,30 @@ class InnerListActivity : AppCompatActivity() {
         fab.setOnClickListener {
             showAddToDoDialog()
         }
-        addSampleToDo()
 
+        if (toDoAdapter.itemCount == 0) {
+            addSampleToDo()
+        }
+        setupSwipeToDelete()
         setupActionBar()
     }
 
-    private fun addSampleToDo() {
-        val sampleTodo = ToDo(
-            item_ID = "1A",
-            title = "Sample ToDo",
-            description = "This is a sample todo item.",
-            dueDate = System.currentTimeMillis(), // Aktuelles Datum
-            priority = 1, // Medium
-            isDone = false
-        )
-        toDoAdapter.addToDo(sampleTodo)
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_inner_list, menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_share -> {
+                shareList()
+                true
+            }
+            R.id.action_delete -> {
+                deleteList()
+                true
+            }
             android.R.id.home -> {
                 onBackPressed()
                 true
@@ -75,7 +91,54 @@ class InnerListActivity : AppCompatActivity() {
         }
     }
 
+
+    private fun shareList() {
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "Sharing the list: ${selectedToDoList?.name}")
+            type = "text/plain"
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share via"))
+    }
+
+    private fun deleteList() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Delete List")
+        builder.setMessage("Are you sure you want to delete this list?")
+        builder.setPositiveButton("Yes") { _, _ ->
+            if (selectedToDoList != null) {
+                CloudFirestore().deleteListFromCloudFirestore(this, selectedToDoList!!)
+                finish()
+            } else {
+                Toast.makeText(this, "No list selected", Toast.LENGTH_SHORT).show()
+            }
+
+                // Zurück zur Übersicht Activity navigieren
+                val intent = Intent(this, ToDoListOverviewActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+        }
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.show()
+    }
+
+    private fun addSampleToDo() {
+        val sampleTodo = ToDo(
+            item_ID = "1A",
+            title = "Sample ToDo",
+            description = "<- Swipe to delete",
+            dueDate = System.currentTimeMillis(),
+            priority = 1, // Medium
+            isDone = false
+        )
+        toDoAdapter.addToDo(sampleTodo)
+    }
+
     override fun onBackPressed() {
+        super.onBackPressed()
         val intent = Intent(this, ToDoListOverviewActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
@@ -100,7 +163,6 @@ class InnerListActivity : AppCompatActivity() {
         }
     }
 
-
     private fun showAddToDoDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Add ToDo")
@@ -112,6 +174,9 @@ class InnerListActivity : AppCompatActivity() {
         val editTextDescription: EditText = view.findViewById(R.id.editTextDescription)
         val buttonSelectDate: Button = view.findViewById(R.id.buttonSelectDate)
         val spinnerPriority: Spinner = view.findViewById(R.id.spinnerPriority)
+        val checkBoxReminder: CheckBox = view.findViewById(R.id.checkBoxReminder)
+        val spinnerReminderTime: Spinner = view.findViewById(R.id.spinnerReminderTime)
+
 
         var selectedDate: Long? = null
 
@@ -129,6 +194,10 @@ class InnerListActivity : AppCompatActivity() {
             datePicker.show()
         }
 
+        checkBoxReminder.setOnCheckedChangeListener { _, isChecked ->
+            spinnerReminderTime.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
+
         builder.setPositiveButton("Add") { dialog, _ ->
             val title = editTextTitle.text.toString()
             val description = editTextDescription.text.toString()
@@ -142,19 +211,11 @@ class InnerListActivity : AppCompatActivity() {
                     dueDate = selectedDate,
                     priority = priority
                 )
-                //selectedToDoList?.todos?.add(todo)
-                //toDoAdapter.notifyDataSetChanged()
                 toDoAdapter.addToDo(todo)
 
-                Log.d("MainActivity", "ToDo hinzugefügt:")
-                Log.d("MainActivity", "Title: ${todo.title}")
-                Log.d("MainActivity", "Description: ${todo.description}")
-                Log.d("MainActivity", "Due Date: ${todo.dueDate}")
-                Log.d("MainActivity", "Priority: ${todo.priority}")
-
-                if (selectedDate != null) {
-                //TODO
-                // scheduleReminder(todo)
+                if (checkBoxReminder.isChecked) {
+                    val reminderTime = spinnerReminderTime.selectedItemPosition
+                    scheduleReminder(todo, reminderTime)
                 }
             }
             dialog.dismiss()
@@ -162,6 +223,56 @@ class InnerListActivity : AppCompatActivity() {
         builder.setNeutralButton("Cancel") { dialog, _ -> dialog.cancel() }
 
         builder.show()
+    }
+
+    private fun scheduleReminder(todo: ToDo, reminderTime: Int) {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val reminderIntent = Intent(this, ReminderReceiver::class.java).apply {
+            putExtra("title", todo.title)
+            putExtra("todo_id", todo.item_ID)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            todo.item_ID.hashCode(),
+            reminderIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or
+                    PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val triggerTime = todo.dueDate
+            ?: System.currentTimeMillis() // Fallback auf jetzt, falls kein Datum angegeben ist
+
+        val reminderMillis = when (reminderTime) {
+            0 -> 15 * 60 * 1000 // 15 Minuten
+            1 -> 30 * 60 * 1000 // 30 Minuten
+            2 -> 60 * 60 * 1000 // 1 Stunde
+            3 -> 2 * 60 * 60 * 1000 // 2 Stunden
+            4 -> 24 * 60 * 60 * 1000 // 1 Tag
+            else -> 0 // Keine Erinnerung
+        }
+
+        val reminderTriggerTime = triggerTime - reminderMillis
+        if (reminderTriggerTime > System.currentTimeMillis()) {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    if (alarmManager.canScheduleExactAlarms()) {
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Permission required to schedule exact alarms. Please enable it in settings.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } else {
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
+                }
+            } catch (e: SecurityException) {
+                Toast.makeText(this, "Failed to schedule alarm: ${e.message}", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
     }
 
     private fun createNotificationChannel() {
@@ -182,7 +293,7 @@ class InnerListActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         if(actionBar != null) {
-            // actionbar element is clickable + add followning icon "<" (default: left)
+            // actionbar element is clickable + add following icon "<" (default: left)
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24)
         }
@@ -192,4 +303,22 @@ class InnerListActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupSwipeToDelete() {
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                (recyclerView.adapter as ToDoAdapter).removeToDoAt(position)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
 }

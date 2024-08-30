@@ -12,18 +12,23 @@
         android:id="@+id/toolbar_items_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:title=""
+        tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/items_title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:textStyle="bold"
             android:text="@string/items_title_text"
-            android:textSize="@dimen/tv_20sp_textsize" />
+            android:textSize="@dimen/tv_20sp_textsize"
+            android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView

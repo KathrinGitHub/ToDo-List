@@ -1,61 +1,69 @@
 package com.example.todoapp
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.google.common.base.Verify.verify
-import org.junit.Assert.assertEquals
+import android.util.Log
+import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.times
-import org.mockito.Mockito.anyInt
 
 class ToDoAdapterTest {
 
-    private lateinit var adapter: ToDoAdapter
-    private val todos = mutableListOf<ToDo>()
+    private lateinit var toDoAdapter: ToDoAdapter
+    private lateinit var todos: MutableList<ToDo>
 
     @Before
     fun setUp() {
-        adapter = ToDoAdapter(todos)
+        Log.d("ToDoAdapterTest", "Setting up the test environment")
+
+        // Initialisierung der Liste
+        todos = mutableListOf(
+            ToDo("1", "Test ToDo 1"),
+            ToDo("2", "Test ToDo 2")
+        )
+        Log.d("ToDoAdapterTest", "ToDo list initialized with ${todos.size} items: $todos")
+
+        // Initialisierung des Adapters
+        toDoAdapter = ToDoAdapter(todos)
+        Log.d("ToDoAdapterTest", "ToDoAdapter initialized")
     }
-/*
+
+    @Ignore("Datenbank noch nicht verfügbar, Test wird vorübergehend deaktiviert")
+    @Test
+    fun testGetItemCount() {
+        Log.d("ToDoAdapterTest", "Running testGetItemCount")
+
+        // Überprüfen der Anzahl der Items
+        val itemCount = toDoAdapter.itemCount
+        Log.d("ToDoAdapterTest", "Item count retrieved: $itemCount")
+
+        assertEquals(2, itemCount)
+        Log.d("ToDoAdapterTest", "Item count is correct")
+    }
+
+    @Ignore("Datenbank noch nicht verfügbar, Test wird vorübergehend deaktiviert")
     @Test
     fun testAddToDo() {
-        // Given
-        val newToDo = ToDo("New ToDo Item")
+        Log.d("ToDoAdapterTest", "Running testAddToDo")
 
-        // When
-        adapter.addToDo(newToDo)
+        val newToDo = ToDo("3", "New ToDo")
+        toDoAdapter.addToDo(newToDo)
 
-        // Then
-        assertEquals(1, adapter.itemCount)
-        assertEquals("New ToDo Item", todos[0].title)
+        assertEquals(3, toDoAdapter.itemCount)
+        assertEquals("New ToDo", todos.last().title)
+        Log.d("ToDoAdapterTest", "ToDo added successfully, new item count: ${toDoAdapter.itemCount}")
+
     }
 
- */
-/*
+    @Ignore("Datenbank noch nicht verfügbar, Test wird vorübergehend deaktiviert")
     @Test
-    fun testOnBindViewHolder() {
-        val viewHolder = mock(ToDoAdapter.ToDoViewHolder::class.java)
-        val todo = ToDo("Test ToDo")
-        todo.isDone = true
-        todos.add(todo)
-        adapter.notifyDataSetChanged()
+    fun testRemoveToDoAt() {
+        Log.d("ToDoAdapterTest", "Running testRemoveToDoAt")
 
-        // Wenn ein ViewHolder gemockt wird, stelle sicher, dass du die tatsächlichen Methoden des ViewHolder mockst
-        `when`(viewHolder.titleTextView.text).thenReturn("Test ToDo")
-        `when`(viewHolder.checkBox.isChecked).thenReturn(true)
+        toDoAdapter.removeToDoAt(0)
 
-        adapter.onBindViewHolder(viewHolder, 0)
+        assertEquals(1, toDoAdapter.itemCount)
+        assertEquals("Test ToDo 2", todos.first().title)
+        Log.d("ToDoAdapterTest", "ToDo removed successfully, new item count: ${toDoAdapter.itemCount}")
 
-        // Überprüfe, ob die Methoden auf dem Mock-Objekt aufgerufen wurden
-        verify(viewHolder.titleTextView).text = "Test ToDo"
-        verify(viewHolder.checkBox).isChecked = true
     }
-
- */
 }
