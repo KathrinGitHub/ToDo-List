@@ -79,6 +79,7 @@ class CloudFirestore {
 
                     fetchListsByIds(toDoListOverviewActivity, listIds) { callbackLists ->
                         lists = callbackLists
+                        lists.sortBy { l -> l.name }
                         callback(lists)
                     }
                 }
@@ -173,6 +174,33 @@ class CloudFirestore {
                 Log.e("CloudFirestore", "Error deleting list", e)
                 Toast.makeText(context, "Failed to delete list", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    fun updateToDoItems(context: Context, toDoList: ToDoList, isAdd: Boolean) {
+
+        firestoreInstance
+            .collection(Constants.TABLENAME_LIST)
+            .document(toDoList.list_ID)
+            .update("todos", toDoList.todos)
+            .addOnSuccessListener {
+                if(isAdd) {
+                    Log.d("CloudFirestore", "Item added successfully")
+                    Toast.makeText(context, "Item added successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.d("CloudFirestore", "Item deleted successfully")
+                    Toast.makeText(context, "Item deleted successfully", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                if(isAdd) {
+                    Log.e("CloudFirestore", "Error adding item", e)
+                    Toast.makeText(context, "Error adding item", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.e("CloudFirestore", "Error deleting item", e)
+                    Toast.makeText(context, "Error deleting item", Toast.LENGTH_SHORT).show()
+                }
+            }
+
     }
 
 
