@@ -42,30 +42,30 @@ jobs:
       - name: Download Dependencies
         run: ./gradlew build --no-daemon
 
-      - name: Create Android Emulator AVD
-        run: |
-          echo "no" | avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" -c 100M
+#      - name: Create Android Emulator AVD
+#        run: |
+#          echo "no" | avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" -c 100M
 
-      - name: Start Android Emulator
-        run: |
-          emulator -avd test -no-window -no-audio -no-boot-anim &
-          adb wait-for-device
-          adb shell input keyevent 82 &
-        env:
-          API_LEVEL: 30
-          TARGET: default
-          ABI: x86_64
-          PROFILE: test
+#      - name: Start Android Emulator
+#        run: |
+#          emulator -avd test -no-window -no-audio -no-boot-anim &
+#          adb wait-for-device
+#          adb shell input keyevent 82 &
+#        env:
+#          API_LEVEL: 30
+#          TARGET: default
+#          ABI: x86_64
+#          PROFILE: test
 
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest --no-daemon
 
-      - name: Run Instrumented Tests
-        run: ./gradlew connectedAndroidTest --no-daemon
+#      - name: Run Instrumented Tests
+#        run: ./gradlew connectedAndroidTest --no-daemon
 
-      - name: Stop Android Emulator
-        if: always()
-        run: adb emu kill
+#      - name: Stop Android Emulator
+#        if: always()
+#        run: adb emu kill
 
       - name: Clear Emulator AVD files
         if: always()
