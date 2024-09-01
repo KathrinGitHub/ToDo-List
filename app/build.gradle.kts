@@ -5,14 +5,14 @@ plugins {
 }
 
 android {
-    namespace = "com.example.todoapp"
+    namespace = "at.fhjoanneum.todoapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.todoapp"
+        applicationId = "at.fhjoanneum.todoapp"
         minSdk = 28
         targetSdk = 34
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -52,5 +52,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation (libs.junit)
 
 }
