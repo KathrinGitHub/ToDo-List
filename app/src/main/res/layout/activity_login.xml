@@ -10,11 +10,11 @@
         android:id="@+id/iv_login_fhj_logo"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/iv_200dp_height"
-        android:src="@drawable/ic_launcher_background"
+        android:src="@drawable/ic_launcher_round"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/true_white"/>
+        android:background="@color/white"/>
 
     <TextView
         android:id="@+id/tv_login_title"
