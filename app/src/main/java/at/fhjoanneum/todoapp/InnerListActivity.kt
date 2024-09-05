@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -11,9 +12,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -173,12 +177,13 @@ class InnerListActivity : AppCompatActivity() {
         val editTextTitle: EditText = view.findViewById(R.id.editTextTitle)
         val editTextDescription: EditText = view.findViewById(R.id.editTextDescription)
         val buttonSelectDate: Button = view.findViewById(R.id.buttonSelectDate)
+        val buttonSelectTime: Button = view.findViewById(R.id.buttonSelectTime)
         val spinnerPriority: Spinner = view.findViewById(R.id.spinnerPriority)
         val checkBoxReminder: CheckBox = view.findViewById(R.id.checkBoxReminder)
         val spinnerReminderTime: Spinner = view.findViewById(R.id.spinnerReminderTime)
 
 
-        var selectedDate: Long? = null
+        val selectedDateTime: Calendar = Calendar.getInstance()
 
         buttonSelectDate.setOnClickListener {
             val calendar = Calendar.getInstance()
@@ -188,15 +193,55 @@ class InnerListActivity : AppCompatActivity() {
 
             val datePicker = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDayOfMonth ->
                 calendar.set(selectedYear, selectedMonth, selectedDayOfMonth)
-                selectedDate = calendar.timeInMillis
+                selectedDateTime.set(selectedYear, selectedMonth, selectedDayOfMonth)
                 buttonSelectDate.text = "$selectedDayOfMonth/${selectedMonth + 1}/$selectedYear"
+
+                buttonSelectTime.visibility = View.VISIBLE
+                checkBoxReminder.visibility = View.VISIBLE
             }, year, month, dayOfMonth)
             datePicker.show()
+        }
+
+        buttonSelectTime.setOnClickListener {
+            val hour = selectedDateTime.get(Calendar.HOUR_OF_DAY)
+            val minute = selectedDateTime.get(Calendar.MINUTE)
+
+            val timePicker = TimePickerDialog(this, { _, selectedHour, selectedMinute ->
+                selectedDateTime.set(Calendar.HOUR_OF_DAY, selectedHour)
+                selectedDateTime.set(Calendar.MINUTE, selectedMinute)
+                buttonSelectTime.text = "$selectedHour:$selectedMinute"
+            }, hour, minute, true)
+            timePicker.show()
         }
 
         checkBoxReminder.setOnCheckedChangeListener { _, isChecked ->
             spinnerReminderTime.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
+
+        val priorities = resources.getStringArray(R.array.priority_array)
+        val icons = arrayOf(
+            R.drawable.baseline_keyboard_arrow_down_24,  // Niedrig
+            R.drawable.baseline_horizontal_rule_24,      // Mittel
+            R.drawable.baseline_keyboard_arrow_up_24     // Hoch
+        )
+
+        val adapter = object : ArrayAdapter<String>(this, R.layout.spinner_item_with_icon, priorities) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = convertView ?: layoutInflater.inflate(R.layout.spinner_item_with_icon, parent, false)
+                val imageView = view.findViewById<ImageView>(R.id.imageViewPriorityIcon)
+                val textView = view.findViewById<TextView>(R.id.textViewPriorityLabel)
+
+                textView.text = priorities[position]
+                imageView.setImageResource(icons[position])
+                return view
+            }
+
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                return getView(position, convertView, parent)
+            }
+        }
+
+        spinnerPriority.adapter = adapter
 
         builder.setPositiveButton("Add") { dialog, _ ->
             val title = editTextTitle.text.toString()
@@ -208,7 +253,7 @@ class InnerListActivity : AppCompatActivity() {
                     item_ID = UUID.randomUUID().toString(),
                     title = title,
                     description = description,
-                    dueDate = selectedDate,
+                    dueDate = selectedDateTime.timeInMillis,
                     priority = priority
                 )
                 toDoAdapter.addToDo(todo)
