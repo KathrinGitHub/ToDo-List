@@ -72,4 +72,7 @@ class LoginActivity : BasicActivity() {
         startActivity(intent)
         finish()
     }
+
+    // this is needed so the user can't go back to the empty MainActivity
+    override fun finish() { }
 }
