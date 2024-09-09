@@ -17,6 +17,15 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:label="@string/filter_add_shared_list"
+                android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="at.fhjoanneum.todoapp"
+                    android:pathPrefix="/*" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".BasicActivity"

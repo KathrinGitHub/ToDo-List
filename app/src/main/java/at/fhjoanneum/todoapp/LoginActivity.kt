@@ -1,6 +1,7 @@
 package at.fhjoanneum.todoapp
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
@@ -11,6 +12,9 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : BasicActivity() {
+
+    private var sharedListId: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -28,6 +32,11 @@ class LoginActivity : BasicActivity() {
         val btnLogin : Button = findViewById(R.id.btn_login_login)
         btnLogin.setOnClickListener {
             logInUser()
+        }
+
+        if(intent.hasExtra("shared_list")) {
+            sharedListId = intent.getStringExtra("shared_list")
+            Log.d("recieveddata", "onCreate: $sharedListId")
         }
     }
 
@@ -68,6 +77,9 @@ class LoginActivity : BasicActivity() {
     fun userLoggedInSuccess(user: User){
         showCustomSnackbar(getString(R.string.logged_in), false)
         val intent = Intent(this, ToDoListOverviewActivity::class.java)
+        if(sharedListId != null) {
+            intent.putExtra("list_id", sharedListId!!)
+        }
         Log.d("todo-list", "start inner list")
         startActivity(intent)
         finish()

@@ -56,4 +56,6 @@
     <!-- INNER LIST SCREEN -->
     <string name="items_title_text">ToDo</string>
 
+    <!-- INTENT FILTER -->
+    <string name="filter_add_shared_list">Add the shared list</string>
 </resources>

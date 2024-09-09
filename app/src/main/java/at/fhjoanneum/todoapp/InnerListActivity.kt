@@ -99,7 +99,7 @@ class InnerListActivity : AppCompatActivity() {
     private fun shareList() {
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, "Sharing the list: ${selectedToDoList?.name}")
+            putExtra(Intent.EXTRA_TEXT, "http://at.fhjoanneum.todoapp/?id=${selectedToDoList?.list_ID}")
             type = "text/plain"
         }
         startActivity(Intent.createChooser(shareIntent, "Share via"))

@@ -2,8 +2,10 @@ package at.fhjoanneum.todoapp
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.widget.EditText
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
