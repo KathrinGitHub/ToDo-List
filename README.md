@@ -1,4 +1,4 @@
-## Requrements
+## Requirements
 
 - JDK 17
 - Gradle 8.7
